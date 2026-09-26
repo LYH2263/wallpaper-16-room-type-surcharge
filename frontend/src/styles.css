@@ -6,4 +6,8 @@ body { margin: 0; font-family: Georgia, serif; background: #faf3e8; }
 .strip-bar { display: flex; gap: 4px; align-items: flex-end; flex-wrap: wrap; }
 .strip { width: 14px; background: linear-gradient(#c49a6c, #8b5a2b); border-radius: 2px 2px 0 0; }
 .roll-chip { display: inline-block; margin: 0.25rem; padding: 0.5rem; background: #fff; border: 1px dashed #6b4226; }
+.badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 0.75rem; font-size: 0.85rem; background: #efe2cf; color: #6b4226; }
+.badge-wet { background: #dceaf3; color: #235a7c; border: 1px solid #9cc3da; }
+.form-row { margin: 0.5rem 0; display: flex; gap: 0.5rem; align-items: center; }
+.saved-ok { color: #2a7a2a; }
 .warn { color: #a00; }

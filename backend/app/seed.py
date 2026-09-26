@@ -7,7 +7,8 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS walls(
             id INTEGER PRIMARY KEY, name TEXT, perimeter REAL, height REAL,
-            data_quality TEXT DEFAULT 'clean', note TEXT DEFAULT ''
+            data_quality TEXT DEFAULT 'clean', note TEXT DEFAULT '',
+            space_type TEXT DEFAULT 'normal'
         );
         CREATE TABLE IF NOT EXISTS rolls(
             id INTEGER PRIMARY KEY, name TEXT, width REAL, length REAL, pattern_cm REAL,
@@ -20,6 +21,16 @@ def init_db():
         );
         """
     )
+    # Idempotent migration for databases created before space_type existed.
+    cols = [r["name"] for r in conn.execute("PRAGMA table_info(walls)").fetchall()]
+    if "space_type" not in cols:
+        conn.execute("ALTER TABLE walls ADD COLUMN space_type TEXT DEFAULT 'normal'")
+    # Wet-room rule defaults; INSERT OR IGNORE keeps operator-changed values.
+    conn.executemany(
+        "INSERT OR IGNORE INTO settings(key,value) VALUES (?,?)",
+        [("wet_room_enabled", "true"), ("wet_room_extra_rolls", "1")],
+    )
+    conn.commit()
     if conn.execute("SELECT COUNT(*) c FROM walls").fetchone()["c"] == 0:
         conn.executemany(
             "INSERT INTO walls(name,perimeter,height,data_quality,note) VALUES (?,?,?,?,?)",
